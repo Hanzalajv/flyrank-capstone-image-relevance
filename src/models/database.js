@@ -11,7 +11,13 @@ export function initDatabase() {
       filename TEXT NOT NULL,
       subject TEXT,
       category TEXT,
+      subcategory TEXT,
       attributes TEXT,
+      setting TEXT,
+      action TEXT,
+      colors TEXT,
+      mood TEXT,
+      composition TEXT,
       caption TEXT,
       confidence REAL,
       embedding TEXT,
@@ -33,15 +39,21 @@ export function initDatabase() {
 
 export function insertImage(image) {
   const stmt = db.prepare(`
-    INSERT OR REPLACE INTO images (id, filename, subject, category, attributes, caption, confidence, embedding)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT OR REPLACE INTO images (id, filename, subject, category, subcategory, attributes, setting, action, colors, mood, composition, caption, confidence, embedding)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `);
   stmt.run(
     image.id || uuidv4(),
     image.filename,
     image.subject,
     image.category,
-    JSON.stringify(image.attributes),
+    image.subcategory || '',
+    JSON.stringify(image.attributes || []),
+    image.setting || '',
+    image.action || '',
+    JSON.stringify(image.colors || []),
+    image.mood || '',
+    image.composition || '',
     image.caption,
     image.confidence,
     image.embedding ? JSON.stringify(image.embedding) : null
@@ -53,6 +65,7 @@ export function getAllImages() {
   return rows.map(row => ({
     ...row,
     attributes: JSON.parse(row.attributes || '[]'),
+    colors: JSON.parse(row.colors || '[]'),
     embedding: row.embedding ? JSON.parse(row.embedding) : null
   }));
 }
@@ -63,6 +76,7 @@ export function getImageById(id) {
   return {
     ...row,
     attributes: JSON.parse(row.attributes || '[]'),
+    colors: JSON.parse(row.colors || '[]'),
     embedding: row.embedding ? JSON.parse(row.embedding) : null
   };
 }
