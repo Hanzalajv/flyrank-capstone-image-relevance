@@ -1,0 +1,14 @@
+run: npm install && npm run dev
+seed: Place 5 wildlife images in data/images/ and matching JSON metadata in data/metadata/. Run POST /images/process.
+test: node tests/run.js
+base_url: http://localhost:3000
+endpoints:
+  - POST /images/process
+  - GET /health
+  - GET /posts/:id/images
+  - GET /images/:id
+  - GET /images/file/:filename
+  - POST /suggestions/:imageId/approve
+  - POST /suggestions/:imageId/reject
+  - GET /api/posts
+  - POST /api/posts

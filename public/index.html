@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Matching Engine</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0A1628; color: #B8B5AE; min-height: 100vh; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+    h1 { color: #F8F7F4; font-size: 2rem; margin-bottom: 8px; }
+    .subtitle { color: #C4A962; font-size: 0.85rem; margin-bottom: 40px; }
+    
+    .posts-grid { display: grid; gap: 16px; margin-bottom: 40px; }
+    .post-card { background: #112240; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 20px; cursor: pointer; transition: all 0.2s; }
+    .post-card:hover { border-color: #C4A962; transform: translateY(-2px); }
+    .post-card h3 { color: #F8F7F4; font-size: 1.1rem; margin-bottom: 6px; }
+    .post-card p { font-size: 0.9rem; color: #787671; line-height: 1.5; }
+
+    .create-section { background: #112240; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 20px; margin-bottom: 40px; }
+    .create-section h3 { color: #C4A962; font-size: 0.9rem; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.1em; }
+    .create-section input, .create-section textarea { width: 100%; background: #0A1628; border: 1px solid rgba(255,255,255,0.1); color: #F8F7F4; padding: 12px; margin-bottom: 12px; border-radius: 4px; font-family: inherit; font-size: 0.9rem; }
+    .create-section textarea { min-height: 80px; resize: vertical; }
+    .btn { background: #C4A962; color: #0A1628; border: none; padding: 12px 24px; font-weight: 600; cursor: pointer; border-radius: 4px; font-size: 0.9rem; }
+    .btn:hover { background: #D4BA72; }
+
+    .results { display: grid; gap: 12px; }
+    .result-card { background: #112240; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 16px; display: flex; gap: 16px; align-items: flex-start; }
+    .result-card.passed { border-left: 3px solid #4CAF50; }
+    .result-card.failed { border-left: 3px solid #f44336; opacity: 0.6; }
+    .result-card .score { font-size: 1.5rem; font-weight: 700; color: #C4A962; min-width: 60px; }
+    .result-card .info { flex: 1; }
+    .result-card .info h4 { color: #F8F7F4; margin-bottom: 4px; }
+    .result-card .info .meta { font-size: 0.8rem; color: #787671; margin-bottom: 4px; }
+    .result-card .info .reason { font-size: 0.85rem; color: #B8B5AE; margin-top: 6px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; }
+    .badge-pass { background: rgba(76,175,80,0.2); color: #4CAF50; }
+    .badge-fail { background: rgba(244,67,54,0.2); color: #f44336; }
+    .back-btn { color: #C4A962; margin-bottom: 20px; display: inline-block; cursor: pointer; font-size: 0.9rem; }
+    .hidden { display: none; }
+    .loading { color: #C4A962; font-size: 1rem; padding: 40px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container" id="app"></div>
+
+  <script>
+    const app = document.getElementById('app');
+
+    async function loadPosts() {
+      const res = await fetch('/api/posts');
+      const posts = await res.json();
+      renderPosts(posts);
+    }
+
+    function renderPosts(posts) {
+      app.innerHTML = `
+        <h1>Image Matching Engine</h1>
+        <p class="subtitle">Select a blog post to find the best matching image</p>
+        <div class="create-section">
+          <h3>Create New Post</h3>
+          <input id="newTitle" placeholder="Post title..." />
+          <textarea id="newBody" placeholder="Post body..."></textarea>
+          <button class="btn" onclick="createPost()">Create Post</button>
+        </div>
+        <div class="posts-grid">
+          ${posts.map(p => `
+            <div class="post-card" onclick="viewMatches('${p.id}')">
+              <h3>${p.title}</h3>
+              <p>${p.body.substring(0, 120)}...</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    async function viewMatches(postId) {
+      app.innerHTML = '<div class="loading">Finding best matches...</div>';
+      const res = await fetch(`/posts/${postId}/images`);
+      const data = await res.json();
+      renderResults(data);
+    }
+
+    function renderResults(data) {
+      const results = data.all_results || [];
+      app.innerHTML = `
+        <div class="back-btn" onclick="loadPosts()">← Back to posts</div>
+        <h1>${data.post.title}</h1>
+        <p class="subtitle">${results.length} images ranked by similarity</p>
+        <div class="results">
+          ${results.map((r, i) => `
+           <div class="result-card ${r.passed ? 'passed' : 'failed'}">
+  <img src="/images/file/${r.filename}" style="width:120px;height:80px;object-fit:cover;border-radius:4px;" onerror="this.style.display='none'" />
+  <div class="score">${r.score.toFixed(3)}</div>
+  <div class="info">
+                <h4>${i + 1}. ${r.subject} <span class="badge ${r.passed ? 'badge-pass' : 'badge-fail'}">${r.passed ? 'MATCH' : 'REJECTED'}</span></h4>
+                <div class="meta">${r.filename} · ${r.category} · ${r.subcategory || ''}</div>
+                <div class="meta">${r.setting} · ${r.action} · ${r.mood}</div>
+                <div class="reason">${r.reason}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    async function createPost() {
+      const title = document.getElementById('newTitle').value.trim();
+      const body = document.getElementById('newBody').value.trim();
+      if (!title || !body) return alert('Title and body required');
+      await fetch('/api/posts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, body })
+      });
+      loadPosts();
+    }
+
+    loadPosts();
+  </script>
+</body>
+</html>
