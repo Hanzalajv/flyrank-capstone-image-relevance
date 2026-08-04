@@ -1,0 +1,29 @@
+{
+  "subject": "Odocoileus virginianus (White-tailed deer)",
+  "category": "deer",
+  "subcategory": "young buck / spike buck",
+  "attributes": [
+    "small pointed spike antlers",
+    "large erect ears with white inner fur",
+    "white markings around eyes and muzzle",
+    "dark black nose tip",
+    "brownish-grey body coat",
+    "distinct white fur undertail patch",
+    "white underbelly",
+    "alert forward-facing head posture",
+    "slender dark legs"
+  ],
+  "setting": "open field covered with dry corn stalks, fallen leaves, and sparse vegetation",
+  "action": "standing still and looking directly at the camera",
+  "colors": [
+    "brown",
+    "grey",
+    "white",
+    "black",
+    "tan"
+  ],
+  "mood": "curious",
+  "composition": "full body",
+  "caption": "A young white-tailed deer buck stands in a dry agricultural field looking intently toward the camera.",
+  "confidence": 0.94
+}

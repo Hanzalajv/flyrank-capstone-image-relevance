@@ -1,0 +1,31 @@
+{
+  "subject": "Ursus arctos (Brown Bear)",
+  "category": "bear",
+  "subcategory": "Eurasian brown bear",
+  "attributes": [
+    "thick dense brown fur",
+    "prominent shoulder hump",
+    "rounded dark ears",
+    "visible pale claws on front paws",
+    "dark wet snout",
+    "slightly open mouth showing dark interior",
+    "sturdy quadrupedal stance on concrete ledge",
+    "lighter tan facial fur",
+    "dark brown fur on lower legs"
+  ],
+  "setting": "rocky enclosure with stacked stone wall and concrete ledge near a small water spout",
+  "action": "standing alert on a ledge looking slightly upward with mouth open",
+  "colors": [
+    "brown",
+    "tan",
+    "beige",
+    "dark brown",
+    "grey",
+    "black",
+    "green"
+  ],
+  "mood": "alert",
+  "composition": "full body",
+  "caption": "A brown bear stands alert on a concrete ledge against a rugged stone wall background.",
+  "confidence": 0.94
+}

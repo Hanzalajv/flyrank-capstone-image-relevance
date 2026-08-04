@@ -1,0 +1,30 @@
+{
+  "subject": "Vulpes vulpes (Red Fox)",
+  "category": "fox",
+  "subcategory": "Red fox",
+  "attributes": [
+    "vibrant reddish-orange dense fur",
+    "large upright pointed ears with black outer trim",
+    "white chin, throat, and chest fur",
+    "dark brown almond-shaped eyes",
+    "black snout and nose tip",
+    "fine delicate facial whiskers",
+    "dark markings around the eyes",
+    "narrow pointed muzzle",
+    "intense forward-facing gaze"
+  ],
+  "setting": "outdoors with a softly blurred wire fence and muted natural background",
+  "action": "sitting still while staring directly ahead into the lens",
+  "colors": [
+    "orange",
+    "red",
+    "white",
+    "black",
+    "brown",
+    "grey"
+  ],
+  "mood": "focused",
+  "composition": "close-up",
+  "caption": "A red fox sits upright with an intense, captivating stare against a softly blurred background.",
+  "confidence": 0.94
+}

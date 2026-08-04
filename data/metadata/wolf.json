@@ -1,0 +1,30 @@
+{
+  "subject": "Canis lupus (Grey Wolf)",
+  "category": "wolf",
+  "subcategory": "Eurasian wolf",
+  "attributes": [
+    "piercing amber yellow eyes",
+    "mottled grey and tawny fur",
+    "erect triangular ears with dark tips",
+    "black nose and mouth rim",
+    "slightly open jaw displaying white teeth",
+    "lighter cream-colored muzzle and throat",
+    "broad head structure with dark facial mask",
+    "slender muscular legs",
+    "notched right ear tip"
+  ],
+  "setting": "rocky dirt terrain near exposed tree roots and stone ground",
+  "action": "standing on dirt ground looking toward the left with an open mouth",
+  "colors": [
+    "grey",
+    "tan",
+    "tawny",
+    "black",
+    "white",
+    "yellow"
+  ],
+  "mood": "watchful",
+  "composition": "full body",
+  "caption": "A grey wolf with striking amber eyes stands on dirt ground near exposed tree roots, looking attentively off to the side.",
+  "confidence": 0.94
+}

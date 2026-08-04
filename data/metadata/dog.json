@@ -1,0 +1,30 @@
+{
+  "subject": "Canis lupus familiaris (Golden Retriever)",
+  "category": "dog",
+  "subcategory": "Golden Retriever",
+  "attributes": [
+    "cream and golden feathered fur coat",
+    "floppy ears with darker golden tips",
+    "open mouth with pink tongue panting",
+    "dark brown almond-shaped eyes",
+    "black nose and lips",
+    "visible white teeth",
+    "front paws resting flat on the ground",
+    "attentive side-profile expression",
+    "lying down in a sphinx position"
+  ],
+  "setting": "vibrant green grassy lawn in an outdoor field or park",
+  "action": "lying on the grass while panting and looking off to the side",
+  "colors": [
+    "cream",
+    "gold",
+    "pink",
+    "black",
+    "green",
+    "white"
+  ],
+  "mood": "playful",
+  "composition": "close-up",
+  "caption": "A golden retriever rests comfortably on a lush green lawn, panting happily with its tongue extended.",
+  "confidence": 0.94
+}
