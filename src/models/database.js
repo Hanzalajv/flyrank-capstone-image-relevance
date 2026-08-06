@@ -1,4 +1,6 @@
 import Database from 'better-sqlite3';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
 const db = new Database('images.db');
@@ -35,6 +37,44 @@ export function initDatabase() {
       created_at TEXT DEFAULT (datetime('now'))
     )
   `);
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS posts (
+      id TEXT PRIMARY KEY,
+      title TEXT NOT NULL,
+      body TEXT NOT NULL,
+      created_at TEXT DEFAULT (datetime('now'))
+    )
+  `);
+
+  // Seed posts if empty
+  const count = db.prepare('SELECT COUNT(*) as count FROM posts').get();
+  if (count.count === 0) {
+    const postsPath = join(process.cwd(), 'data', 'posts', 'posts.json');
+    const posts = JSON.parse(readFileSync(postsPath, 'utf-8'));
+    const insert = db.prepare('INSERT OR IGNORE INTO posts (id, title, body) VALUES (?, ?, ?)');
+    for (const p of posts) {
+      insert.run(p.id, p.title, p.body);
+    }
+  }
+}
+
+export function getAllPosts() {
+  return db.prepare('SELECT * FROM posts ORDER BY created_at DESC').all();
+}
+
+export function getPostById(id) {
+  return db.prepare('SELECT * FROM posts WHERE id = ?').get(id);
+}
+
+export function getImageByFilename(filename) {
+  return db.prepare('SELECT * FROM images WHERE filename = ?').get(filename);
+}
+
+export function insertPost(post) {
+  const stmt = db.prepare('INSERT INTO posts (id, title, body) VALUES (?, ?, ?)');
+  stmt.run(post.id, post.title, post.body);
+  return post;
 }
 
 export function insertImage(image) {

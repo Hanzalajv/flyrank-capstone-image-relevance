@@ -48,6 +48,6 @@ Query → Compare Vectors → Rank by Similarity → Mismatch Guard → Best Mat
 - Express.js (backend)
 - SQLite via better-sqlite3 (database)
 - Xenova Transformers (local embeddings)
-- Gemini Chat (vision labeling, manual)
+- Gemini api and Chat (vision labeling, manual)
 - Vanilla HTML/CSS/JS (admin UI)
 

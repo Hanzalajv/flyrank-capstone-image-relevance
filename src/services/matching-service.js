@@ -1,7 +1,11 @@
-import { getAllImages } from '../models/database.js';
-import { getEmbedding, cosineSimilarity } from './embedding-service.js';
+
+
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { getAllImages, getAllPosts, getPostById } from '../models/database.js';
+import { getEmbedding, cosineSimilarity } from './embedding-service.js';
+
+
 
 const POSTS_FILE = join(process.cwd(), 'data', 'posts', 'posts.json');
 
@@ -11,8 +15,7 @@ function getPosts() {
 }
 
 export async function matchImagesForPost(postId) {
-  const posts = getPosts();
-  const post = posts.find(p => p.id === postId);
+  const post = getPostById(postId);
   if (!post) return null;
 
   const images = getAllImages();

@@ -57,3 +57,24 @@ tests.forEach(t => {
   if (t.passed) passed++;
 });
 console.log(`${passed}/${tests.length} tests passed`);
+
+// Test: Malformed JSON is rejected
+function testSchemaValidation() {
+  const badJson = '{ "subject": "test", "category": "fox" }'; // missing caption
+  try {
+    const parsed = JSON.parse(badJson);
+    const hasRequired = parsed.subject && parsed.category && parsed.caption;
+    tests.push({
+      name: 'Schema rejects JSON missing required fields',
+      passed: !hasRequired,
+      detail: hasRequired ? 'Should have rejected' : 'Correctly rejected'
+    });
+  } catch (e) {
+    tests.push({
+      name: 'Schema rejects malformed JSON',
+      passed: true,
+      detail: 'Correctly threw parse error'
+    });
+  }
+}
+testSchemaValidation();

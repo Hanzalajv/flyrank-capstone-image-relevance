@@ -1,20 +1,32 @@
-import { readdirSync, readFileSync } from 'fs';
+import { readdirSync, readFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { insertImage } from '../models/database.js';
+import { insertImage, getImageByFilename } from '../models/database.js';
 
 const IMAGES_DIR = join(process.cwd(), 'data', 'images');
 const METADATA_DIR = join(process.cwd(), 'data', 'metadata');
 
 export async function processImages() {
   const imageFiles = readdirSync(IMAGES_DIR).filter(f => f.endsWith('.jpg') || f.endsWith('.png'));
-  const metadataFiles = readdirSync(METADATA_DIR).filter(f => f.endsWith('.json'));
   
+  if (!existsSync(METADATA_DIR)) {
+    mkdirSync(METADATA_DIR, { recursive: true });
+  }
+
+  const metadataFiles = readdirSync(METADATA_DIR).filter(f => f.endsWith('.json'));
   const results = [];
 
   for (const file of imageFiles) {
     const baseName = file.replace(/\.(jpg|png)$/, '');
     const metadataPath = join(METADATA_DIR, `${baseName}.json`);
+
+    // Idempotency: skip if already in database
+    const existing = getImageByFilename(file);
+    if (existing) {
+      console.log(`  Skipping ${file}: already in database`);
+      results.push({ file, status: 'skipped', error: 'Already processed' });
+      continue;
+    }
 
     if (!metadataFiles.includes(`${baseName}.json`)) {
       console.log(`  Skipping ${file}: no metadata file found`);
@@ -26,12 +38,10 @@ export async function processImages() {
       const raw = readFileSync(metadataPath, 'utf-8');
       const metadata = JSON.parse(raw);
 
-      // Validate required fields
       if (!metadata.subject || !metadata.category || !metadata.caption) {
         throw new Error('Missing required fields in metadata');
       }
 
-      // Flag low confidence
       const isLowConfidence = (metadata.confidence || 0) < 0.7;
 
       const image = {
